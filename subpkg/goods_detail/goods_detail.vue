@@ -1,6 +1,6 @@
 <template>
 	<view>
-		cate分类
+		商品详情
 	</view>
 </template>
 
@@ -10,10 +10,7 @@
 			return {
 				
 			};
-		},
-    onLoad() {
-      
-    }
+		}
 	}
 </script>
 
