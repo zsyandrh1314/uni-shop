@@ -140,6 +140,9 @@ var _default =
     return {};
 
 
+  },
+  onLoad: function onLoad() {
+
   } };exports.default = _default;
 
 /***/ })
