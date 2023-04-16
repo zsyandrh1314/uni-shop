@@ -760,7 +760,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -1696,7 +1696,7 @@ function normalizeComponent (
 
 /***/ }),
 
-/***/ 103:
+/***/ 106:
 /*!********************************************************************************************!*\
   !*** D:/Program Files/HBuilderProjects/uni-shop/components/uni-swipe-action-item/mpwxs.js ***!
   \********************************************************************************************/
@@ -1814,7 +1814,7 @@ var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));
 var _vuex = _interopRequireDefault(__webpack_require__(/*! vuex */ 12));
 
 var _cart = _interopRequireDefault(__webpack_require__(/*! ./cart.js */ 13));
-var _user = _interopRequireDefault(__webpack_require__(/*! ./user.js */ 158));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} // 1.导入 Vue 和 Vuex
+var _user = _interopRequireDefault(__webpack_require__(/*! ./user.js */ 14));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} // 1.导入 Vue 和 Vuex
 // (1) 导入购物车的 vuex 模块
 // 2.将 Vuex 安装为 Vue 的插件
 _vue.default.use(_vuex.default);
@@ -2911,6 +2911,54 @@ var _default = {
 /***/ }),
 
 /***/ 14:
+/*!****************************************************************!*\
+  !*** D:/Program Files/HBuilderProjects/uni-shop/store/user.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
+  // 开启命名空间
+  namespaced: true,
+
+  // state 数据
+  state: function state() {return {
+      // 3. 获取本地的收获地址数据，初始化 address 对象
+      address: JSON.parse(uni.getStorageSync('address') || '{}') };},
+
+
+  // 方法
+  mutations: {
+    // 更新收获地址
+    updateAddress: function updateAddress(state, address) {
+      state.address = address;
+
+      // 2.通过 this.commit() 方法，调用 m_user模块下的 saveAddressToStorage
+      this.commit('m_user/saveAddressToStorage');
+    },
+    // 1. 定义将 address 持久化存储到本地的 mutations 方法
+    saveAddressToStorage: function saveAddressToStorage(state) {
+      uni.setStorageSync('address', JSON.stringify(state.address));
+    } },
+
+
+  // 数据包装器
+  getters: {
+    // 把收货的详细地址抽离为 getters，方便在多个页面和组件之间实现复用
+    // 收获详细地址的计算属性
+    addstr: function addstr(state) {
+      //provinceName 国标收货地址第一级地址
+      if (!state.address.provinceName) return '';
+
+      // 拼接 省，市，区，详细地址 的字符串并返回给用户
+      return state.address.provinceName + state.address.cityName + state.address.countyName + state.address.detailInfo;
+    } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 15:
 /*!*********************************************************************************************************************!*\
   !*** D:/Program Files/HBuilderProjects/uni-shop/node_modules/@escook/request-miniprogram/miniprogram_dist/index.js ***!
   \*********************************************************************************************************************/
@@ -2991,54 +3039,6 @@ var _default = {
 
 
 var $http = new Request();exports.$http = $http;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-
-/***/ 158:
-/*!****************************************************************!*\
-  !*** D:/Program Files/HBuilderProjects/uni-shop/store/user.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
-  // 开启命名空间
-  namespaced: true,
-
-  // state 数据
-  state: function state() {return {
-      // 3. 获取本地的收获地址数据，初始化 address 对象
-      address: JSON.parse(uni.getStorageSync('address') || '{}') };},
-
-
-  // 方法
-  mutations: {
-    // 更新收获地址
-    updateAddress: function updateAddress(state, address) {
-      state.address = address;
-
-      // 2.通过 this.commit() 方法，调用 m_user模块下的 saveAddressToStorage
-      this.commit('m_user/saveAddressToStorage');
-    },
-    // 1. 定义将 address 持久化存储到本地的 mutations 方法
-    saveAddressToStorage: function saveAddressToStorage(state) {
-      uni.setStorageSync('address', JSON.stringify(state.address));
-    } },
-
-
-  // 数据包装器
-  getters: {
-    // 把收货的详细地址抽离为 getters，方便在多个页面和组件之间实现复用
-    // 收获详细地址的计算属性
-    addstr: function addstr(state) {
-      //provinceName 国标收货地址第一级地址
-      if (!state.address.provinceName) return '';
-
-      // 拼接 省，市，区，详细地址 的字符串并返回给用户
-      return state.address.provinceName + state.address.cityName + state.address.countyName + state.address.detailInfo;
-    } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
@@ -8573,7 +8573,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -8594,14 +8594,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -8677,7 +8677,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = this.$shouldDiffData === false ? data : diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -9072,18 +9072,18 @@ internalMixin(Vue);
 
 /***/ }),
 
-/***/ 21:
+/***/ 22:
 /*!*********************************************************************************************!*\
   !*** ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator/index.js ***!
   \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! regenerator-runtime */ 22);
+module.exports = __webpack_require__(/*! regenerator-runtime */ 23);
 
 /***/ }),
 
-/***/ 22:
+/***/ 23:
 /*!************************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime-module.js ***!
   \************************************************************/
@@ -9114,7 +9114,7 @@ var oldRuntime = hadRuntime && g.regeneratorRuntime;
 // Force reevalutation of runtime.js.
 g.regeneratorRuntime = undefined;
 
-module.exports = __webpack_require__(/*! ./runtime */ 23);
+module.exports = __webpack_require__(/*! ./runtime */ 24);
 
 if (hadRuntime) {
   // Restore the original runtime.
@@ -9131,7 +9131,7 @@ if (hadRuntime) {
 
 /***/ }),
 
-/***/ 23:
+/***/ 24:
 /*!*****************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime.js ***!
   \*****************************************************/
@@ -9863,7 +9863,7 @@ if (hadRuntime) {
 
 /***/ }),
 
-/***/ 24:
+/***/ 25:
 /*!*************************************************************************!*\
   !*** D:/Program Files/HBuilderProjects/uni-shop/mixins/tabbar-badge.js ***!
   \*************************************************************************/
@@ -9943,7 +9943,7 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 90:
+/***/ 93:
 /*!********************************************************************************!*\
   !*** D:/Program Files/HBuilderProjects/uni-shop/components/uni-icons/icons.js ***!
   \********************************************************************************/
